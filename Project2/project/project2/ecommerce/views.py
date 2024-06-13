@@ -224,3 +224,33 @@ def update_woocommerce(request, woocommerce_id : int , payload : woocomerseuserI
         active=woocommmrcee.active,
     )
 
+@api.delete("/integration/{integration_id}/",response=integrateIn)
+def delete_integration(request, integration_id : int):
+    integrationn = integrate.objects.filter(id=integration_id).first()
+    if not integrationn :
+        return HttpResponse(status=404)
+    
+    integrationn.delete()
+    return HttpResponse(status=204)
+
+
+@api.put("/integration/{integration_id}/",response=integrateIn)
+def update_integrate(request,integration_id : int , payload : integrateIn):
+    integratee=get_object_or_404(integrate,id=integration_id)
+    integratee.type=payload.type
+    integratee.consumer_key=payload.consumer_key
+    integratee.secret_key=payload.serect_key
+    integratee.active=payload.active
+    integratee.name=payload.name
+    integratee.description=payload.description
+
+
+    return integrateIn(
+        id=integratee.id,
+        type=integratee.type,
+        consumer_key=integratee.consumer_key,
+        serect_key=integratee.secret_key,
+        active=integratee.active,
+        name=integratee.name,
+        description=integratee.description,
+    )
