@@ -21,6 +21,20 @@ class Item(models.Model):
 class woocomerceuser(models.Model):
     consumer_key=models.CharField(max_length=1000,default="default value")
     secret_key=models.CharField(max_length=1000,default="default value")
+    active = models.BooleanField(default=False)
+
+
+class integrate(models.Model):
+    type=models.CharField(max_length=255,default="default value")
+    consumer_key=models.CharField(max_length=1000,default="default value")
+    secret_key=models.CharField(max_length=1000,default="default value")
+    active = models.BooleanField(default=False)
+    name = models.CharField(max_length=255, default="Integration Name")
+    description = models.CharField(max_length=100,default="default value")
+
+
+
+
     
 
 

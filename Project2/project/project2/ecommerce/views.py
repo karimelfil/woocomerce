@@ -82,6 +82,43 @@ def create_item(request, payload: ItemIn):
         return handle_exception(e)
 
 
+@api.post("/woocomerseuser/",response=woocomerseuserIn)
+def create_woocomeerseuser(request,payload : woocomerseuserIn):
+    woocomerceuserr= woocomerceuser.objects.create(
+        consumer_key=payload.consumer_key,
+        secret_key=payload.serect_key,
+        active=payload.active,
+    )
+    return woocomerseuserIn(
+        id=woocomerceuserr.id,
+        consumer_key=woocomerceuserr.consumer_key,
+        serect_key=woocomerceuserr.secret_key,
+        active=woocomerceuserr.active
+    )
+
+
+@api.post("/integration/",response=integrateIn)
+def create_integration(request,payload : integrateIn):
+    integratee=integrate.objects.create(
+        type=payload.type,
+        consumer_key=payload.consumer_key,
+        secret_key=payload.serect_key,
+        active=payload.active,
+        name=payload.name,
+        description=payload.description
+    )
+    return integrateIn(
+        id=integratee.id,
+        type=integratee.type,
+        consumer_key=integratee.consumer_key,
+        serect_key=integratee.secret_key,
+        active=integratee.active,
+        name=integratee.name,
+        description=integratee.description
+    )
+
+
+
 @api.delete("/category/{category_id}/")
 def delete_category(request, category_id: int):
     category = Category.objects.filter(id=category_id).first()
@@ -158,3 +195,32 @@ def update_item(request, item_id: int, payload: ItemIn):
         brand=item.brand,
         category_id=category.id
     )
+
+
+
+@api.delete("/woocommerce/{woocommerce_id}/",response=woocomerseuserIn)
+def delete_woocommerce(request,woocommerce_id : int):
+    woocommercee=woocomerceuser.objects.filter(id=woocommerce_id).first()
+    if not woocommercee:
+        return HttpResponse(status=404)
+
+    woocommercee.delete()
+    return HttpResponse(status=204)
+
+
+
+@api.put("/woocommerce/{woocommerce_id}/",response=woocomerseuserIn)
+def update_woocommerce(request, woocommerce_id : int , payload : woocomerseuserIn):
+    woocommmrcee=get_object_or_404(woocomerceuser,id=woocommerce_id)
+    woocommmrcee.consumer_key=payload.consumer_key
+    woocommmrcee.secret_key=payload.consumer_key
+    woocommmrcee.active=payload.active
+    woocommmrcee.save()
+
+    return woocomerseuserIn(
+        id=woocommmrcee.id,
+        consumer_key=woocommmrcee.consumer_key,
+        serect_key=woocommmrcee.secret_key,
+        active=woocommmrcee.active,
+    )
+
