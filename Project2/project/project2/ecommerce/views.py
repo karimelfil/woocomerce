@@ -7,7 +7,6 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from ninja.errors import HttpError
 api = NinjaAPI()
 
-#  create functions : 
 def handle_exception(e):
     if isinstance(e, ObjectDoesNotExist):
         return JsonResponse({"error": "Object not found"}, status=404)
@@ -18,7 +17,6 @@ def handle_exception(e):
     else:
         return JsonResponse({"error": "An unexpected error occurred "}, status=500)
     
-
 # CRUD FUCNTIONS : 
 @api.post("/category/",response=CategoryIn)
 def create_category(request,payload:CategoryIn):
@@ -35,8 +33,6 @@ def create_category(request,payload:CategoryIn):
     except Exception as e:
         return handle_exception(e)
 
-    
-
 @api.post("/tags/",response=TagIn)
 def create_tags(request,payload : TagIn):
     try:
@@ -52,7 +48,6 @@ def create_tags(request,payload : TagIn):
     except Exception as e:
         return handle_exception(e)
     
-
 @api.post("/items/", response=ItemOut)
 def create_item(request, payload: ItemIn):
     try:
@@ -81,43 +76,45 @@ def create_item(request, payload: ItemIn):
     except Exception as e:
         return handle_exception(e)
 
-
 @api.post("/woocomerseuser/",response=woocomerseuserIn)
 def create_woocomeerseuser(request,payload : woocomerseuserIn):
-    woocomerceuserr= woocomerceuser.objects.create(
-        consumer_key=payload.consumer_key,
-        secret_key=payload.serect_key,
-        active=payload.active,
-    )
-    return woocomerseuserIn(
-        id=woocomerceuserr.id,
-        consumer_key=woocomerceuserr.consumer_key,
-        serect_key=woocomerceuserr.secret_key,
-        active=woocomerceuserr.active
-    )
-
+    try:
+        woocomerceuserr= woocomerceuser.objects.create(
+            consumer_key=payload.consumer_key,
+            secret_key=payload.serect_key,
+            active=payload.active,
+        )
+        return woocomerseuserIn(
+            id=woocomerceuserr.id,
+            consumer_key=woocomerceuserr.consumer_key,
+            serect_key=woocomerceuserr.secret_key,
+            active=woocomerceuserr.active
+        )
+    except Exception as e:
+        return handle_exception(e)
 
 @api.post("/integration/",response=integrateIn)
 def create_integration(request,payload : integrateIn):
-    integratee=integrate.objects.create(
-        type=payload.type,
-        consumer_key=payload.consumer_key,
-        secret_key=payload.serect_key,
-        active=payload.active,
-        name=payload.name,
-        description=payload.description
-    )
-    return integrateIn(
-        id=integratee.id,
-        type=integratee.type,
-        consumer_key=integratee.consumer_key,
-        serect_key=integratee.secret_key,
-        active=integratee.active,
-        name=integratee.name,
-        description=integratee.description
-    )
-
-
+    try:
+        integratee=integrate.objects.create(
+            type=payload.type,
+            consumer_key=payload.consumer_key,
+            secret_key=payload.serect_key,
+            active=payload.active,
+            name=payload.name,
+            description=payload.description
+        )
+        return integrateIn(
+            id=integratee.id,
+            type=integratee.type,
+            consumer_key=integratee.consumer_key,
+            serect_key=integratee.secret_key,
+            active=integratee.active,
+            name=integratee.name,
+            description=integratee.description
+        )
+    except Exception as e:
+        return handle_exception(e)
 
 @api.delete("/category/{category_id}/")
 def delete_category(request, category_id: int):
@@ -141,7 +138,6 @@ def update_category(request, category_id: int, payload: CategoryIn):
         name=category.name,
         description=category.description
     )
-
 
 @api.delete("/tag/{tag_id}/")
 def delete_tag(request, tag_id: int):
@@ -196,8 +192,6 @@ def update_item(request, item_id: int, payload: ItemIn):
         category_id=category.id
     )
 
-
-
 @api.delete("/woocommerce/{woocommerce_id}/",response=woocomerseuserIn)
 def delete_woocommerce(request,woocommerce_id : int):
     woocommercee=woocomerceuser.objects.filter(id=woocommerce_id).first()
@@ -206,8 +200,6 @@ def delete_woocommerce(request,woocommerce_id : int):
 
     woocommercee.delete()
     return HttpResponse(status=204)
-
-
 
 @api.put("/woocommerce/{woocommerce_id}/",response=woocomerseuserIn)
 def update_woocommerce(request, woocommerce_id : int , payload : woocomerseuserIn):
@@ -232,7 +224,6 @@ def delete_integration(request, integration_id : int):
     
     integrationn.delete()
     return HttpResponse(status=204)
-
 
 @api.put("/integration/{integration_id}/",response=integrateIn)
 def update_integrate(request,integration_id : int , payload : integrateIn):
