@@ -37,3 +37,35 @@ class ItemOut(BaseModel):
     weight : float
     brand : str
     category_id: int
+
+
+class woocomerseuserIn(BaseModel):
+    id : int
+    consumer_key : str
+    serect_key : str 
+    active : bool
+
+class woocomerseuserOut(BaseModel):
+    id : int
+    consumer_key : str
+    serect_key : str 
+    active : bool
+
+class integrateIn(BaseModel):
+    id : int
+    type : str
+    consumer_key : str
+    serect_key : str 
+    active : bool
+    name: str
+    description: str
+
+
+class integrateOut(BaseModel):
+    id : int
+    type : str
+    consumer_key : str
+    serect_key : str 
+    active : bool
+    name: str
+    description: str
