@@ -245,3 +245,81 @@ def update_integrate(request,integration_id : int , payload : integrateIn):
         name=integratee.name,
         description=integratee.description,
     )
+
+
+@api.get("/category/{category_id}/", response=CategoryIn)
+def get_category(request, category_id: int):
+    try:
+        category = get_object_or_404(Category, id=category_id)
+        return CategoryIn(
+            id=category.id,
+            name=category.name,
+            description=category.description
+        )
+    except Exception as e:
+        return handle_exception(e)
+
+
+
+@api.get("/tags/{tag_id}/", response=TagIn)
+def get_tag(request, tag_id: int):
+    try:
+        tag = get_object_or_404(Tag, id=tag_id)
+        return TagIn(
+            id=tag.id,
+            name=tag.name,
+            description=tag.description
+        )
+    except Exception as e:
+        return handle_exception(e)
+
+
+@api.get("/items/{item_id}/", response=ItemOut)
+def get_item(request, item_id: int):
+    try:
+        item = get_object_or_404(Item, id=item_id)
+        item_dict = {
+            'id': item.id,
+            'name': item.name,
+            'description': item.description,
+            'tag_id': item.tag.id,
+            'category_id': item.category.id,
+            'weight': item.weight,
+            'brand': item.brand,
+        }
+        return item_dict
+    except Exception as e:
+        return handle_exception(e)
+
+
+
+@api.get("/woocomerseuser/{user_id}/", response=woocomerseuserIn)
+def get_woocomerseuser(request, user_id: int):
+    try:
+        woocomerceuserr = get_object_or_404(woocomerceuser, id=user_id)
+        return woocomerseuserIn(
+            id=woocomerceuserr.id,
+            consumer_key=woocomerceuserr.consumer_key,
+            serect_key=woocomerceuserr.secret_key,
+            active=woocomerceuserr.active
+        )
+    except Exception as e:
+        return handle_exception(e)
+
+
+@api.get("/integration/{integration_id}/",response=integrateIn)
+def get_integration(request,integration_id : int):
+    try:
+        integration=get_object_or_404(integrate,id=integration_id)
+        return integrateIn(
+            id=integration.id,
+            type=integration.type,
+            consumer_key=integration.consumer_key,
+            serect_key=integration.secret_key,
+            active=integration.active,
+            name=integration.name,
+            description=integration.description,
+        )
+    except Exception as e :
+        return handle_exception(e)
+    

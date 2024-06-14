@@ -4,3 +4,5 @@ from .models import *
 admin.site.register(Tag)
 admin.site.register(Category)
 admin.site.register(Item)
+admin.site.register(woocomerceuser)
+admin.site.register(integrate)
