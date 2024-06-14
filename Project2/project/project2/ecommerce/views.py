@@ -18,7 +18,7 @@ def handle_exception(e):
         return JsonResponse({"error": "An unexpected error occurred "}, status=500)
     
 # CRUD FUCNTIONS : 
-@api.post("/category/",response=CategoryIn)
+@api.post("/category/",response=CategoryIn,tags=["Category"])
 def create_category(request,payload:CategoryIn):
     try : 
         category=Category.objects.create(
@@ -33,7 +33,7 @@ def create_category(request,payload:CategoryIn):
     except Exception as e:
         return handle_exception(e)
 
-@api.post("/tags/",response=TagIn)
+@api.post("/tags/",response=TagIn,tags=["Tag"])
 def create_tags(request,payload : TagIn):
     try:
         tags=Tag.objects.create(
@@ -48,7 +48,7 @@ def create_tags(request,payload : TagIn):
     except Exception as e:
         return handle_exception(e)
     
-@api.post("/items/", response=ItemOut)
+@api.post("/items/", response=ItemOut,tags=["Items"])
 def create_item(request, payload: ItemIn):
     try:
         category = get_object_or_404(Category, id=payload.category_id)
@@ -61,6 +61,8 @@ def create_item(request, payload: ItemIn):
             weight=payload.weight,
             brand=payload.brand,
             category=category,
+            price=payload.price,
+            discount_price=payload.discount_price,
         )
         item_dict = {
             'id': item.id,
@@ -70,13 +72,15 @@ def create_item(request, payload: ItemIn):
             'category_id': category.id,
             'weight': item.weight,
             'brand': item.brand,
+            'price': item.price,
+            'discount_price' : item.discount_price
         }
 
         return item_dict
     except Exception as e:
         return handle_exception(e)
 
-@api.post("/woocomerseuser/",response=woocomerseuserIn)
+@api.post("/woocomerseuser/",response=woocomerseuserIn,tags=["Woocommerceuser"])
 def create_woocomeerseuser(request,payload : woocomerseuserIn):
     try:
         woocomerceuserr= woocomerceuser.objects.create(
@@ -93,13 +97,13 @@ def create_woocomeerseuser(request,payload : woocomerseuserIn):
     except Exception as e:
         return handle_exception(e)
 
-@api.post("/integration/",response=integrateIn)
+@api.post("/integration/",response=integrateIn,tags=["Integration"])
 def create_integration(request,payload : integrateIn):
     try:
         integratee=integrate.objects.create(
             type=payload.type,
             consumer_key=payload.consumer_key,
-            secret_key=payload.serect_key,
+            secret_key=payload.secret_key,
             active=payload.active,
             name=payload.name,
             description=payload.description
@@ -108,7 +112,7 @@ def create_integration(request,payload : integrateIn):
             id=integratee.id,
             type=integratee.type,
             consumer_key=integratee.consumer_key,
-            serect_key=integratee.secret_key,
+            secret_key=integratee.secret_key,
             active=integratee.active,
             name=integratee.name,
             description=integratee.description
@@ -116,7 +120,7 @@ def create_integration(request,payload : integrateIn):
     except Exception as e:
         return handle_exception(e)
 
-@api.delete("/category/{category_id}/")
+@api.delete("/category/{category_id}/",tags=["Category"])
 def delete_category(request, category_id: int):
     category = Category.objects.filter(id=category_id).first()
     if not category:
@@ -125,7 +129,7 @@ def delete_category(request, category_id: int):
     category.delete()
     return {"succces" : True}
 
-@api.put("/category/{category_id}/", response=CategoryIn)
+@api.put("/category/{category_id}/", response=CategoryIn,tags=["Category"])
 def update_category(request, category_id: int, payload: CategoryIn):
     category = get_object_or_404(Category, id=category_id)
 
@@ -139,7 +143,7 @@ def update_category(request, category_id: int, payload: CategoryIn):
         description=category.description
     )
 
-@api.delete("/tag/{tag_id}/")
+@api.delete("/tag/{tag_id}/",tags=["Tag"])
 def delete_tag(request, tag_id: int):
     tag = Tag.objects.filter(id=tag_id).first()
     if not tag:
@@ -148,7 +152,7 @@ def delete_tag(request, tag_id: int):
     tag.delete()
     return {"succces" : True}
 
-@api.put("/tag/{tag_id}/", response=TagIn)
+@api.put("/tag/{tag_id}/", response=TagIn,tags=["Tag"])
 def update_tag(request, tag_id: int, payload: TagIn):
     tag= get_object_or_404(Tag, id=tag_id)
 
@@ -162,7 +166,7 @@ def update_tag(request, tag_id: int, payload: TagIn):
         description=tag.description
     )
 
-@api.delete("/item/{item_id}/")
+@api.delete("/item/{item_id}/",tags=["Items"])
 def delete_item(request, item_id: int):
     item = Item.objects.filter(id=item_id).first()
     if not item:
@@ -171,7 +175,7 @@ def delete_item(request, item_id: int):
     item.delete()
     return HttpResponse(status=204)
 
-@api.put("/item/{item_id}/", response=ItemIn)
+@api.put("/item/{item_id}/", response=ItemIn,tags=["Items"])
 def update_item(request, item_id: int, payload: ItemIn):
     item = get_object_or_404(Item, id=item_id)
     category = get_object_or_404(Category, id=payload.category_id)
@@ -181,6 +185,8 @@ def update_item(request, item_id: int, payload: ItemIn):
     item.description = payload.description
     item.weight = payload.weight
     item.brand = payload.brand
+    item.price = payload.price
+    item.discount_price = payload.discount_price
     item.save()
 
     return ItemIn(
@@ -189,10 +195,12 @@ def update_item(request, item_id: int, payload: ItemIn):
         description=item.description,
         weight=item.weight,
         brand=item.brand,
-        category_id=category.id
+        category_id=category.id,
+        price=item.price,
+        discount_price=item.discount_price,
     )
 
-@api.delete("/woocommerce/{woocommerce_id}/",response=woocomerseuserIn)
+@api.delete("/woocommerce/{woocommerce_id}/",response=woocomerseuserIn,tags=["Woocommerceuser"])
 def delete_woocommerce(request,woocommerce_id : int):
     woocommercee=woocomerceuser.objects.filter(id=woocommerce_id).first()
     if not woocommercee:
@@ -201,7 +209,7 @@ def delete_woocommerce(request,woocommerce_id : int):
     woocommercee.delete()
     return HttpResponse(status=204)
 
-@api.put("/woocommerce/{woocommerce_id}/",response=woocomerseuserIn)
+@api.put("/woocommerce/{woocommerce_id}/",response=woocomerseuserIn,tags=["Woocommerceuser"])
 def update_woocommerce(request, woocommerce_id : int , payload : woocomerseuserIn):
     woocommmrcee=get_object_or_404(woocomerceuser,id=woocommerce_id)
     woocommmrcee.consumer_key=payload.consumer_key
@@ -216,7 +224,7 @@ def update_woocommerce(request, woocommerce_id : int , payload : woocomerseuserI
         active=woocommmrcee.active,
     )
 
-@api.delete("/integration/{integration_id}/",response=integrateIn)
+@api.delete("/integration/{integration_id}/",response=integrateIn,tags=["Integration"])
 def delete_integration(request, integration_id : int):
     integrationn = integrate.objects.filter(id=integration_id).first()
     if not integrationn :
@@ -225,12 +233,12 @@ def delete_integration(request, integration_id : int):
     integrationn.delete()
     return HttpResponse(status=204)
 
-@api.put("/integration/{integration_id}/",response=integrateIn)
+@api.put("/integration/{integration_id}/",response=integrateIn,tags=["Integration"])
 def update_integrate(request,integration_id : int , payload : integrateIn):
     integratee=get_object_or_404(integrate,id=integration_id)
     integratee.type=payload.type
     integratee.consumer_key=payload.consumer_key
-    integratee.secret_key=payload.serect_key
+    integratee.secret_key=payload.secret_key
     integratee.active=payload.active
     integratee.name=payload.name
     integratee.description=payload.description
@@ -240,14 +248,13 @@ def update_integrate(request,integration_id : int , payload : integrateIn):
         id=integratee.id,
         type=integratee.type,
         consumer_key=integratee.consumer_key,
-        serect_key=integratee.secret_key,
+        secret_key=integratee.secret_key,
         active=integratee.active,
         name=integratee.name,
         description=integratee.description,
     )
 
-
-@api.get("/category/{category_id}/", response=CategoryIn)
+@api.get("/category/{category_id}/", response=CategoryIn,tags=["Category"])
 def get_category(request, category_id: int):
     try:
         category = get_object_or_404(Category, id=category_id)
@@ -259,9 +266,7 @@ def get_category(request, category_id: int):
     except Exception as e:
         return handle_exception(e)
 
-
-
-@api.get("/tags/{tag_id}/", response=TagIn)
+@api.get("/tags/{tag_id}/", response=TagIn,tags=["Tag"])
 def get_tag(request, tag_id: int):
     try:
         tag = get_object_or_404(Tag, id=tag_id)
@@ -273,8 +278,7 @@ def get_tag(request, tag_id: int):
     except Exception as e:
         return handle_exception(e)
 
-
-@api.get("/items/{item_id}/", response=ItemOut)
+@api.get("/items/{item_id}/", response=ItemOut,tags=["Items"])
 def get_item(request, item_id: int):
     try:
         item = get_object_or_404(Item, id=item_id)
@@ -291,23 +295,7 @@ def get_item(request, item_id: int):
     except Exception as e:
         return handle_exception(e)
 
-
-
-@api.get("/woocomerseuser/{user_id}/", response=woocomerseuserIn)
-def get_woocomerseuser(request, user_id: int):
-    try:
-        woocomerceuserr = get_object_or_404(woocomerceuser, id=user_id)
-        return woocomerseuserIn(
-            id=woocomerceuserr.id,
-            consumer_key=woocomerceuserr.consumer_key,
-            serect_key=woocomerceuserr.secret_key,
-            active=woocomerceuserr.active
-        )
-    except Exception as e:
-        return handle_exception(e)
-
-
-@api.get("/integration/{integration_id}/",response=integrateIn)
+@api.get("/integration/{integration_id}/",response=integrateIn,tags=["Integration"])
 def get_integration(request,integration_id : int):
     try:
         integration=get_object_or_404(integrate,id=integration_id)
@@ -323,3 +311,77 @@ def get_integration(request,integration_id : int):
     except Exception as e :
         return handle_exception(e)
     
+@api.get("/integration/", response=list[integrateIn],tags=["Integration"])
+def list_all_integration(request):
+    try:
+        integration_instances = integrate.objects.all()
+        integration_list = [
+            integrateIn(
+                id=integration.id,
+                type=integration.type,
+                consumer_key=integration.consumer_key,
+                serect_key=integration.secret_key,
+                active=integration.active,
+                name=integration.name,
+                description=integration.description
+            ) for integration in integration_instances
+        ]
+        return integration_list
+    except Exception as e:
+        return handle_exception(e)
+
+@api.put("/integration/{integration_id}/activate", response=integrateOut,tags=["Integration"])
+def activate_integration(request, integration_id: int):
+        integration = get_object_or_404(integrate, id=integration_id)
+
+        if integration.active == True:
+            return integrateOut(
+                id=integration.id,
+                type=integration.type,
+                consumer_key=integration.consumer_key,
+                secret_key=integration.secret_key,
+                active=integration.active,
+                name=integration.name,
+                description=integration.description
+            )
+        elif integration.active == False:
+            integration.active = True
+            integration.save()
+
+            return integrateOut(
+                id=integration.id,
+                type=integration.type,
+                consumer_key=integration.consumer_key,
+                secret_key=integration.secret_key, 
+                active=integration.active,
+                name=integration.name,
+                description=integration.description
+            )
+
+@api.put("/integration/{integration_id}/desactivate", response=integrateOut,tags=["Integration"])
+def desactivate_integration(request, integration_id: int):
+        integration = get_object_or_404(integrate, id=integration_id)
+
+        if integration.active == False:
+            return integrateOut(
+                id=integration.id,
+                type=integration.type,
+                consumer_key=integration.consumer_key,
+                secret_key=integration.secret_key,
+                active=integration.active,
+                name=integration.name,
+                description=integration.description
+            )
+        elif integration.active == True:
+            integration.active = False
+            integration.save()
+
+            return integrateOut(
+                id=integration.id,
+                type=integration.type,
+                consumer_key=integration.consumer_key,
+                secret_key=integration.secret_key, 
+                active=integration.active,
+                name=integration.name,
+                description=integration.description
+            )
