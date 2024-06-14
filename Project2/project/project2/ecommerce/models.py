@@ -22,7 +22,8 @@ class woocomerceuser(models.Model):
     consumer_key=models.CharField(max_length=1000,default="default value")
     secret_key=models.CharField(max_length=1000,default="default value")
     active = models.BooleanField(default=False)
-
+    class Meta:
+        unique_together = ('consumer_key', 'secret_key')
 
 class integrate(models.Model):
     type=models.CharField(max_length=255,default="default value")
