@@ -254,6 +254,7 @@ def update_integrate(request,integration_id : int , payload : integrateIn):
         description=integratee.description,
     )
 
+
 @api.get("/category/{category_id}/", response=CategoryIn,tags=["Category"])
 def get_category(request, category_id: int):
     try:
@@ -266,6 +267,8 @@ def get_category(request, category_id: int):
     except Exception as e:
         return handle_exception(e)
 
+
+
 @api.get("/tags/{tag_id}/", response=TagIn,tags=["Tag"])
 def get_tag(request, tag_id: int):
     try:
@@ -277,6 +280,7 @@ def get_tag(request, tag_id: int):
         )
     except Exception as e:
         return handle_exception(e)
+
 
 @api.get("/items/{item_id}/", response=ItemOut,tags=["Items"])
 def get_item(request, item_id: int):
