@@ -15,6 +15,8 @@ class Item(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE,related_name="items")
     weight = models.FloatField(default=0.0)
     brand = models.CharField(max_length=100, default="default value")
+    price=models.FloatField(default=0.0)
+    discount_price=models.FloatField(default=0.0)
     class Meta:
         unique_together = ('tag', 'category')
 

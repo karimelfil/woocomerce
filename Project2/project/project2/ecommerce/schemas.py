@@ -28,6 +28,8 @@ class ItemIn(BaseModel):
     category_id:int
     weight : float
     brand : str
+    price : float
+    discount_price : float
 
 class ItemOut(BaseModel):
     id : int
@@ -37,6 +39,8 @@ class ItemOut(BaseModel):
     weight : float
     brand : str
     category_id: int
+    price : float
+    discount_price : float
 
 
 class woocomerseuserIn(BaseModel):
@@ -55,8 +59,8 @@ class integrateIn(BaseModel):
     id : int
     type : str
     consumer_key : str
-    serect_key : str 
-    active : bool
+    secret_key : str 
+    active : bool 
     name: str
     description: str
 
@@ -65,7 +69,7 @@ class integrateOut(BaseModel):
     id : int
     type : str
     consumer_key : str
-    serect_key : str 
+    secret_key : str 
     active : bool
     name: str
     description: str
