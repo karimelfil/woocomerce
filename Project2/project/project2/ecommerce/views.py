@@ -254,7 +254,6 @@ def update_integrate(request,integration_id : int , payload : integrateIn):
         description=integratee.description,
     )
 
-
 @api.get("/category/{category_id}/", response=CategoryIn,tags=["Category"])
 def get_category(request, category_id: int):
     try:
@@ -267,8 +266,6 @@ def get_category(request, category_id: int):
     except Exception as e:
         return handle_exception(e)
 
-
-
 @api.get("/tags/{tag_id}/", response=TagIn,tags=["Tag"])
 def get_tag(request, tag_id: int):
     try:
@@ -280,7 +277,6 @@ def get_tag(request, tag_id: int):
         )
     except Exception as e:
         return handle_exception(e)
-
 
 @api.get("/items/{item_id}/", response=ItemOut,tags=["Items"])
 def get_item(request, item_id: int):
@@ -324,7 +320,7 @@ def list_all_integration(request):
                 id=integration.id,
                 type=integration.type,
                 consumer_key=integration.consumer_key,
-                serect_key=integration.secret_key,
+                secret_key=integration.secret_key,
                 active=integration.active,
                 name=integration.name,
                 description=integration.description
@@ -334,58 +330,17 @@ def list_all_integration(request):
     except Exception as e:
         return handle_exception(e)
 
-@api.put("/integration/{integration_id}/activate", response=integrateOut,tags=["Integration"])
+@api.put("/integration/{integration_id}/activate",tags=["Integration"])
 def activate_integration(request, integration_id: int):
+    try:
         integration = get_object_or_404(integrate, id=integration_id)
 
         if integration.active == True:
-            return integrateOut(
-                id=integration.id,
-                type=integration.type,
-                consumer_key=integration.consumer_key,
-                secret_key=integration.secret_key,
-                active=integration.active,
-                name=integration.name,
-                description=integration.description
-            )
+            return {"error": "The integration is already activated"}
         elif integration.active == False:
             integration.active = True
             integration.save()
+            return {"message": "Integration activated successfully"}
 
-            return integrateOut(
-                id=integration.id,
-                type=integration.type,
-                consumer_key=integration.consumer_key,
-                secret_key=integration.secret_key, 
-                active=integration.active,
-                name=integration.name,
-                description=integration.description
-            )
-
-@api.put("/integration/{integration_id}/desactivate", response=integrateOut,tags=["Integration"])
-def desactivate_integration(request, integration_id: int):
-        integration = get_object_or_404(integrate, id=integration_id)
-
-        if integration.active == False:
-            return integrateOut(
-                id=integration.id,
-                type=integration.type,
-                consumer_key=integration.consumer_key,
-                secret_key=integration.secret_key,
-                active=integration.active,
-                name=integration.name,
-                description=integration.description
-            )
-        elif integration.active == True:
-            integration.active = False
-            integration.save()
-
-            return integrateOut(
-                id=integration.id,
-                type=integration.type,
-                consumer_key=integration.consumer_key,
-                secret_key=integration.secret_key, 
-                active=integration.active,
-                name=integration.name,
-                description=integration.description
-            )
+    except Exception as e:
+        return handle_exception(e)
